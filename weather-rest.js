@@ -10,7 +10,7 @@ var ds = loopback.createDataSource('soap',
     connector: require('loopback-connector-soap'),
     remotingEnabled: true,
     // wsdl: 'http://wsf.cdyne.com/WeatherWS/Weather.asmx?WSDL' // The url to WSDL
-    wsdl: path.join(__dirname, './weather.wsdl')
+    wsdl: path.join(__dirname, './error.wsdl')
   });
 
 // Unfortunately, the methods from the connector are mixed in asynchronously
@@ -20,47 +20,6 @@ ds.once('connected', function () {
   // Create the model
   var WeatherService = ds.createModel('WeatherService', {});
 
-  // Refine the methods
-  WeatherService.forecast = function (zip, cb) {
-    WeatherService.GetCityForecastByZIP({ZIP: zip || '94555'}, function (err, response) {
-      console.log('Forecast: %j', response);
-      var result = (!err && response.GetCityForecastByZIPResult.Success) ?
-        response.GetCityForecastByZIPResult.ForecastResult.Forecast : [];
-      cb(err, result);
-    });
-  };
-
-  WeatherService.weather = function (zip, cb) {
-    WeatherService.GetCityWeatherByZIP({ZIP: zip || '94555'}, function (err, response) {
-      console.log('Weather: %j', response);
-      // var result = response.GetCityWeatherByZIPResult.Temperature;
-      var result = response;
-      cb(err, result);
-    });
-  };
-
-  // Map to REST/HTTP
-  loopback.remoteMethod(
-    WeatherService.forecast, {
-      accepts: [
-        {arg: 'zip', type: 'string', required: true,
-          http: {source: 'query'}}
-      ],
-      returns: {arg: 'result', type: 'object', root: true},
-      http: {verb: 'get', path: '/forecast'}
-    }
-  );
-
-  loopback.remoteMethod(
-    WeatherService.weather, {
-      accepts: [
-        {arg: 'zip', type: 'string', required: true,
-          http: {source: 'query'}}
-      ],
-      returns: {arg: 'result', type: 'object', root: true},
-      http: {verb: 'get', path: '/weather'}
-    }
-  );
 
   // Expose to REST
   app.model(WeatherService);
@@ -69,7 +28,7 @@ ds.once('connected', function () {
   app.use(app.get('restApiRoot'), loopback.rest());
 // API explorer (if present)
   try {
-    var explorer = require('loopback-explorer')(app);
+    var explorer = require('loopback-component-explorer')(app);
     app.use('/explorer', explorer);
     app.once('started', function (baseUrl) {
       console.log('Browse your REST API at %s%s', baseUrl, explorer.route);

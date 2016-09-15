@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+<definitions
+    name="EAC-PKI-IS-Reader"
+    targetNamespace="uri:EAC-PKI-IS-Reader-Protocol/1.1"
+    xmlns:tns="uri:EAC-PKI-IS-Reader-Protocol/1.1"
+    xmlns:nsBT="uri:eacBT/1.1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.xmlsoap.org/wsdl/ http://schemas.xmlsoap.org/wsdl/2003-02-11.xsd"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    >
+    
+    <types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema">
+            <import namespace="http://www.w3.org/2001/XMLSchema"/>
+            <import namespace="uri:eacBT/1.1" schemaLocation="./error.xsd"/>
+        </schema>
+    </types>
+
+	<message name="GetMasterList_Req">
+	</message>
+	<message name="GetMasterList_Res">
+		<part name="Result" type="nsBT:GetMasterListResult"/>
+	</message>
+
+
+	<portType name="EAC-PKI-IS-Reader-ProtocolType">
+		<operation name="GetMasterList">
+			<input message="tns:GetMasterList_Req"/>
+			<output message="tns:GetMasterList_Res"/>
+		</operation>
+	</portType>
+
+
+	<binding name="EAC-IS-Reader" type="tns:EAC-PKI-IS-Reader-ProtocolType">
+		<SOAP:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="GetMasterList">
+			<SOAP:operation style="rpc" soapAction=""/>
+			<input>
+				<SOAP:body use="literal" namespace="uri:EAC-PKI-IS-Reader-Protocol/1.1" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<SOAP:body use="literal" namespace="uri:EAC-PKI-IS-Reader-Protocol/1.1" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+	</binding>
+
+
+    <service name="EAC-IS-Reader-ProtocolService">
+        <port name="EAC-IS-Reader-ProtocolServicePort" binding="tns:EAC-IS-Reader">
+            <SOAP:address location="http://URL_NOT_SPECIFIED"/>
+        </port>
+    </service>
+</definitions>
